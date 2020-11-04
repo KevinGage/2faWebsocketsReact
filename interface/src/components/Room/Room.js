@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Messages from '../Messages/Messages';
 
+
 const io = require('socket.io-client');
 const socket = io('http://localhost:3001');
 
@@ -30,12 +31,20 @@ function Room() {
     socket.emit('join room', {room: 'test-room'});
   }
 
+  const authenticateSocket = () => {
+    socket.emit('authenticate', {token: 'im a legit jwt'});
+  }
+
  return(
   <div>
     <h1>
       {inRoom && `You Have Entered The Room` }
       {!inRoom && `Outside Room` }
     </h1>
+
+    <button onClick={() => authenticateSocket()}>
+      authenticate socket
+    </button>
 
     <button onClick={() => requestJoinRoom()}>
       {inRoom && `Leave Room` }

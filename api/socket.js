@@ -28,6 +28,7 @@ io.on('connection', socket => {
     console.log('user disconnected');
   });
 
+  require('./sockets/auth')(socket);
   require('./sockets/rooms')(socket);
   require('./sockets/messages')(socket);
 });

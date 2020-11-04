@@ -15,7 +15,17 @@ router.post('/login', async(req, res, next) => {
     req.logIn(user, async (err) => {
       if (err) { return next(err); }
 
-      return res.redirect('/auth/user');
+      // add jwt here???  Or add another route that lets a user fetch a jwt for their session.
+      // Probably option 2 so the client side can decide when to authenticate the socket.
+      // Only downside is an attacked who has a valid session can just fetch a jwt.  But if an attacker is already authenticated do they need a jwt?
+      return res.status(200).json({'data': {
+        'id': req.user.id,
+        'email': req.user.email,
+        'firstname': req.user.firstname,
+        'lastname': req.user.lastname,
+        'active': req.user.active,
+        'otp': req.user.otp ? true : false
+      }});
     });
   })(req, res, next);
 });
@@ -42,21 +52,6 @@ router.get('/setup-totp', async(req, res, next) => {
 });
 
 /* Route to login with totp */
-// example 1
-// app.post('/login-otp', 
-//   passport.authenticate('totp', { failureRedirect: '/login-otp', failureFlash: true }),
-//   function(req, res) {
-//     req.session.secondFactor = 'totp';
-//     res.redirect('/');
-//   });
-
-// example 2
-// app.post('/login-otp', passport.authenticate('totp', {
-//   failureRedirect: '/login',
-//   successRedirect: `/users/${req.user.id}`
-// }));
-
-// my attempt.
 // otp should be base64 encoded in db
 router.post('/login-otp', 
   passport.authenticate('totp'),
