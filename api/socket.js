@@ -4,7 +4,11 @@ const socketApi = {};
 const session = require('express-session');
 
 // Initialize sessions for sockets
-const sessionMiddleware = session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }});
+/* Generate randon cookie secret */
+const generateRandomString = (length) => (Array(length).fill(0).map(x => Math.random().toString(36).charAt(2)).join(''));
+const cookieSecret = generateRandomString(32);
+
+const sessionMiddleware = session({ secret: cookieSecret, cookie: { maxAge: 60000 }});
 
 io.use((socket, next) => {
   sessionMiddleware(socket.request, {}, next);
