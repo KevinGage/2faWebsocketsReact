@@ -8,11 +8,14 @@ function Room() {
   const [inRoom, setInRoom] = useState(false);
 
    useEffect(() => {
-    if(inRoom) {
-      console.log('joining room');
-      socket.emit('join room', {room: 'test-room'});
-    }
+    socket.on('join', payload => {
+      if (!payload.success) {
+        console.log('room authorization failed');
+      }
+      setInRoom(() => payload.success);
+    });
 
+    // cleanup when unmounting component
     return () => {
       if(inRoom) {
         console.log('leaving room');
@@ -23,10 +26,8 @@ function Room() {
     }
   });
 
-  const handleInRoom = () => {
-    inRoom
-      ? setInRoom(false)
-      : setInRoom(true);
+  const requestJoinRoom = () => {
+    socket.emit('join room', {room: 'test-room'});
   }
 
  return(
@@ -36,7 +37,7 @@ function Room() {
       {!inRoom && `Outside Room` }
     </h1>
 
-    <button onClick={() => handleInRoom()}>
+    <button onClick={() => requestJoinRoom()}>
       {inRoom && `Leave Room` }
       {!inRoom && `Enter Room` }
     </button>
