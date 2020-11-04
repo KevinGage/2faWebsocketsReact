@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('api:server');
 var http = require('http');
+const socketApi = require('../socket');
 
 /**
  * Get port from environment and store in Express.
@@ -22,36 +23,9 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
- * Test Socker io server
+ * Attach websockets
  */
-const io = require('socket.io')(server);
-
-io.on('connection', socket => {
-  console.log('a user connected');
-  
-  socket.on('disconnect', reason => {
-    console.log('user disconnected');
-  });
-
-  socket.on('join room', data => {
-    console.log('room join');
-    console.log(data);
-    socket.join(data.room);
-  });
-
-  socket.on('leave room', data => {
-    console.log('leaving room');
-    console.log(data);
-    socket.leave(data.room)
-  });
-
-  socket.on('new message', data => {
-    console.log(`new message: ${data.room}`);
-    socket.broadcast
-    .to(data.room)
-    .emit('receive message', data)
-  });
-});
+socketApi.io.attach(server);
 
 /**
  * Listen on provided port, on all network interfaces.
