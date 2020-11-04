@@ -28,18 +28,7 @@ io.on('connection', socket => {
     console.log('user disconnected');
   });
 
-  socket.on('join room', data => {
-    console.log('room join');
-    console.log(data);
-    socket.join(data.room);
-  });
-
-  socket.on('leave room', data => {
-    console.log('leaving room');
-    console.log(data);
-    socket.leave(data.room)
-  });
-
+  require('./sockets/rooms')(socket);
   require('./sockets/messages')(socket);
 });
 
