@@ -1,14 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import Room from './components/Room/Room';
+import {AuthProvider} from './components/Auth/AuthProvider';
+import {OtpProvider} from './components/Auth/OtpProvider';
+import Main from './components/Main/Main';
 
 function App() {
   return (
     <div>
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Room />
+        <AuthProvider>
+          <OtpProvider>
+            <Main />
+          </OtpProvider>
+        </AuthProvider>
       </header>
     </div>
   );
