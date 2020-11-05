@@ -17,15 +17,10 @@ io.use((socket, next) => {
 });
 
 io.on('connection', socket => {
-  // get session and add a property to it
-  const session = socket.request.session;
-  session.messageCount = 0;
-  session.save();
-
-  console.log('a user connected');
+  console.log('a new session connected');
 
   socket.on('disconnect', reason => {
-    console.log('user disconnected');
+    console.log('session disconnected');
   });
 
   require('./sockets/auth')(socket);
