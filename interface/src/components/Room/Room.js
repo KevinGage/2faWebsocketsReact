@@ -32,8 +32,10 @@ function Room() {
   });
 
   useEffect(() => {
-    const authenticateSocket = async () => {
-      try {
+    const authenticateSocket = () => {
+      // This function is wrapped to be anonymous
+      // This ensures other javascript can't access the local jwt variable
+      (async () => {try {
         const res = await axios.get('/auth/jwt');
 
         if (res.status === 200) {
@@ -48,7 +50,7 @@ function Room() {
         
       } catch (e) {
         console.log(e);
-      }
+      }})()
     }
     if (otpAuthenticated) {
       // 2fa authentication is complete for http session
