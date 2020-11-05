@@ -17,3 +17,6 @@ Joining socketio rooms requires an authenticated session.
 7. I never implemented logout functionality.
 8. I could have just had the login page submit the username, password, and 2fa info for both http and sockets without using jwt.
 9. To keep this example simple I'm not adding any other session protection mechanisms like CSRF protection.
+10. I should be whitelisting the allowed jwt encryption type
+11. I should be checking the not-before time in the token in additional to the other time based claim
+12. The token secret should probably be randomly generated each time the server starts, or use asymetric key encryption
