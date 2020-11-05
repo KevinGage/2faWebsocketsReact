@@ -29,6 +29,7 @@ const Otp = () => {
         setOtpSecret(() => secret)
         setOtpConfigured(() => true);
       } else {
+        console.log('fetching secret failed');
         console.log(res);
       }
     } catch (e) {
@@ -48,6 +49,7 @@ const Otp = () => {
         setOtpAuthenticated(() => true);
       } else {
         setOtpCode(() => '');
+        console.log('login failed');
         console.log(res);
       }
     } catch (e) {

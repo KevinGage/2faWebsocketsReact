@@ -6,13 +6,13 @@ function Messages(props) {
 
   useEffect(() => {
     props.socket.on('receive message', payload => {
-      console.log(`message: ${payload}`)
+      // console.log(`message: ${payload}`);
       setMessageCount(messageCount + 1);
     });
   });
 
   useEffect(() => {
-    console.log('received new message');
+    // console.log('received new message');
     document.title = `${messageCount} new messages have been emitted`;
   }, [messageCount]); //only re-run the effect if new message comes in
 
@@ -27,7 +27,7 @@ function Messages(props) {
   }
 
   const handleNewMessage = () => {
-    console.log('emitting new message');
+    // console.log('emitting new message');
     props.socket.emit('new message', {
       room: 'test-room'
     });

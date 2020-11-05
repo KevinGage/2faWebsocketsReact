@@ -17,7 +17,6 @@ const Login = () => {
   const login = async () => {
     const result = await authenticate();
     if (result) {
-      console.log(result);
       setUser(() => {return {username: result.username}});
       setAuthenticated(() => true);
       setOtpConfigured(() => result.totpConfigured);

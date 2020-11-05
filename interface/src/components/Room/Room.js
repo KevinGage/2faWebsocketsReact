@@ -39,7 +39,6 @@ function Room() {
         const res = await axios.get('/auth/jwt');
 
         if (res.status === 200) {
-          console.log(res.data);
           const jwt = res.data;
         socket.emit('authenticate', {token: jwt});
         } else {
@@ -55,7 +54,6 @@ function Room() {
     if (otpAuthenticated) {
       // 2fa authentication is complete for http session
       // get jwt and authenticate socket
-      console.log('going to authenticate socket');
       authenticateSocket();
     }
   }, [otpAuthenticated]);
