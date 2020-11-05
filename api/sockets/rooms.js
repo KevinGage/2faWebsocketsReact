@@ -6,7 +6,9 @@ module.exports = function(socket) {
       console.log('denied')
       socket.emit('join', {'room': data.room, 'success': false});
     } else {
-      console.log('allowed');
+      console.log('user joined room');
+      console.log(session);
+      console.log(`userId: ${session.user.id} userEmail: ${session.user.email} RoomName: ${data.room}`)
       socket.emit('join', {'room': data.room, 'success': true});
       socket.join(data.room);
     }

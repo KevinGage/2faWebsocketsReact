@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Messages from '../Messages/Messages';
-
+import {OtpContext} from '../Auth/OtpProvider';
+import axios from 'axios';
 
 const io = require('socket.io-client');
 const socket = io('http://localhost:3001');
 
 function Room() {
+  //const [otpConfigured, setOtpConfigured, otpAuthenticated, setOtpAuthenticated] = useContext(OtpContext);
+  const otpAuthenticated = useContext(OtpContext)[2];
+
   const [inRoom, setInRoom] = useState(false);
 
    useEffect(() => {
@@ -27,12 +31,35 @@ function Room() {
     }
   });
 
+  useEffect(() => {
+    const authenticateSocket = async () => {
+      try {
+        const res = await axios.get('/auth/jwt');
+
+        if (res.status === 200) {
+          console.log(res.data);
+          const jwt = res.data;
+        socket.emit('authenticate', {token: jwt});
+        } else {
+          console.log('socket authentication failed');
+          console.log(res);
+        }
+
+        
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    if (otpAuthenticated) {
+      // 2fa authentication is complete for http session
+      // get jwt and authenticate socket
+      console.log('going to authenticate socket');
+      authenticateSocket();
+    }
+  }, [otpAuthenticated]);
+
   const requestJoinRoom = () => {
     socket.emit('join room', {room: 'test-room'});
-  }
-
-  const authenticateSocket = () => {
-    socket.emit('authenticate', {token: 'im a legit jwt'});
   }
 
  return(
@@ -41,10 +68,6 @@ function Room() {
       {inRoom && `You Have Entered The Room` }
       {!inRoom && `Outside Room` }
     </h1>
-
-    <button onClick={() => authenticateSocket()}>
-      authenticate socket
-    </button>
 
     <button onClick={() => requestJoinRoom()}>
       {inRoom && `Leave Room` }

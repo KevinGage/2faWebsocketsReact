@@ -14,7 +14,7 @@ const db = require('./controllers/db');
 
 /* Define routers */
 const authRouter = require('./routes/auth');
-const usersRouter = require('./routes/users');
+// const usersRouter = require('./routes/users');
 
 /* intialize web server */
 var app = express();
@@ -82,6 +82,6 @@ app.use(passport.session());
 
 /* initialize routers */
 app.use('/auth', authRouter);
-app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 
 module.exports = app;

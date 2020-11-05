@@ -5,6 +5,7 @@ const authorize = require('../controllers/authorization');
 const db = require('../controllers/db');
 const base32 = require('thirty-two');
 const crypto = require('crypto');
+const jwt = require("jsonwebtoken");
 
 /* Route to attempt login and create session */
 router.post('/login', async(req, res, next) => {
@@ -18,6 +19,10 @@ router.post('/login', async(req, res, next) => {
       // add jwt here???  Or add another route that lets a user fetch a jwt for their session.
       // Probably option 2 so the client side can decide when to authenticate the socket.
       // Only downside is an attacked who has a valid session can just fetch a jwt.  But if an attacker is already authenticated do they need a jwt?
+      // XSS cant steal a session cookie but could steal this jwt...
+      // so maybe login page should just send an auth erquest with the socket as well as the login for http?  what is the point of the jwt?
+      // oh 2fa was the point of jwt
+
       return res.status(200).json({'data': {
         'id': req.user.id,
         'email': req.user.email,
@@ -57,9 +62,20 @@ router.post('/login-otp',
   passport.authenticate('totp'),
   function(req, res) {
     req.session.secondFactor = 'totp';
-    res.redirect(`/users/${req.user.id}`);
+    // res.redirect(`/users/${req.user.id}`);
+    return res.status(200).send();
   }
 );
+
+/* Anything below this middleware will require 2fa */
+router.use(authorize.authorizeSecondFactor);
+
+/* Route to get JWT for socket authentication */
+router.get('/jwt', async (req, res, next) => {
+  const token = jwt.sign({'id': req.user.id}, process.env.JTW_SECRET, { expiresIn: '10s' });
+
+  return res.status(200).json(token);
+});
 
 /* Route to return currently loged in user details */
 router.get('/user', async(req, res, next) => {

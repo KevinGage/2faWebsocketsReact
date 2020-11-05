@@ -29,7 +29,7 @@ module.exports.users = {
       request.input('email', sql.VarChar, email)
       request.input('password', sql.VarChar, password)
 
-      const result = await request.query(`SELECT id, email, password, firstname, lastname, active
+      const result = await request.query(`SELECT id, email, password, firstname, lastname, otp, active
         FROM tblUsers
         WHERE email = @email
         AND active = 1`)
